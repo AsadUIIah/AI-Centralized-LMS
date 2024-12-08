@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+  /* Page transition effect */
+  body {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .fade-out {
+    animation: fadeOut 0.5s ease-in-out forwards;
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+    body {
+      background: #f8f9fa;
+      font-family: 'Arial', sans-serif;
+    }
+    .navbar {
+      background-color: #28a745;
+    }
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+    }
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    .card-header {
+      background-color: #28a745;
+      color: #fff;
+      text-align: center;
+      font-weight: bold;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+    .card-body {
+      text-align: center;
+      padding: 20px;
+    }
+    .card-body a {
+      text-decoration: none;
+      color: #28a745;
+      font-weight: bold;
+    }
+    .card-body a:hover {
+      text-decoration: underline;
+    }
+    .logout-btn {
+      background: #fff;
+      color: #28a745;
+      border: 1px solid #28a745;
+      border-radius: 30px;
+      padding: 5px 15px;
+    }
+    .logout-btn:hover {
+      background: #28a745;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Admin Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+          <li class="nav-item">
+            <button class="logout-btn">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container my-5">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">Manage Teachers</div>
+          <div class="card-body">
+            <p>Add, remove, or update teacher profiles.</p>
+            <a href="ManageTeachers.html">Manage Teachers</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">Assign Rooms</div>
+          <div class="card-body">
+            <p>Allocate rooms for courses and classes.</p>
+            <a href="AssignRooms.html">Assign Rooms</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">View Reports</div>
+          <div class="card-body">
+            <p>Generate and view university reports.</p>
+            <a href="ViewReports.html">View Reports</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-4 mt-3">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">Manage Courses</div>
+          <div class="card-body">
+            <p>Assign courses to teachers and students.</p>
+            <a href="ManageCourses.html">Manage Courses</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">Teachers Attendance</div>
+          <div class="card-body">
+            <p>Track and manage teacher attendance records.</p>
+            <a href="TeachersAttendance.html">Manage Attendance</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll("a");
+    links.forEach(link => {
+      link.addEventListener("click", function (event) {
+        if (this.getAttribute("href").startsWith("#") || this.getAttribute("target") === "_blank") {
+          return; // Skip anchor links and external links
+        }
+
+        event.preventDefault();
+        const href = this.getAttribute("href");
+
+        document.body.classList.add("fade-out");
+        setTimeout(() => {
+          window.location.href = href;
+        }, 500); // Match this timeout with the fade-out animation duration
+      });
+    });
+  });
+</script>
+
+</html>
+
