@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Quizzes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f4f6f9;
+      font-family: 'Arial', sans-serif;
+    }
+    .navbar {
+      background-color: #2575fc;
+    }
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+    }
+    .container {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .quiz-card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+    .quiz-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .logout-btn {
+      background: #fff;
+      color: #2575fc;
+      border: 1px solid #2575fc;
+      border-radius: 30px;
+      padding: 5px 15px;
+    }
+    .logout-btn:hover {
+      background: #2575fc;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="StudentDashboard.html">LMS|Student Dashboard</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+              <li class="nav-item">
+                <button class="logout-btn">Logout</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+  <div class="container">
+    <h3>Your Quizzes</h3>
+    <h5>Upcoming Quizzes</h5>
+    <div id="upcoming-quizzes">
+      <!-- Upcoming quizzes will be dynamically injected here -->
+    </div>
+    <h5>Completed Quizzes</h5>
+    <div id="completed-quizzes">
+      <!-- Completed quizzes will be dynamically injected here -->
+    </div>
+  </div>
+
+  <script>
+    // Simulated quiz data from the database
+    const quizzes = {
+      upcoming: [
+        { id: 1, title: "Science Quiz 2", date: "2024-12-18", topics: "Laws of Motion" },
+      ],
+      completed: [
+        { id: 2, title: "Math Quiz 1", date: "2024-12-10", score: "18/20" },
+        { id: 3, title: "History Quiz 1", date: "2024-12-12", score: "15/20" },
+      ],
+    };
+
+    const upcomingContainer = document.getElementById("upcoming-quizzes");
+    const completedContainer = document.getElementById("completed-quizzes");
+
+    // Render Upcoming Quizzes
+    quizzes.upcoming.forEach(quiz => {
+      const quizCard = document.createElement("div");
+      quizCard.classList.add("quiz-card");
+      quizCard.innerHTML = `
+        <h5>${quiz.title}</h5>
+        <p>Date: ${quiz.date}</p>
+        <p>Topics: ${quiz.topics}</p>
+      `;
+      upcomingContainer.appendChild(quizCard);
+    });
+
+    // Render Completed Quizzes
+    quizzes.completed.forEach(quiz => {
+      const quizCard = document.createElement("div");
+      quizCard.classList.add("quiz-card");
+      quizCard.innerHTML = `
+        <h5>${quiz.title}</h5>
+        <p>Completed on: ${quiz.date}</p>
+        <p>Score: ${quiz.score}</p>
+      `;
+      completedContainer.appendChild(quizCard);
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
