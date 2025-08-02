@@ -1,0 +1,203 @@
+{% extends 'index.html' %}
+{% block title %}Dashboard | LMS {% endblock title %}
+{% block profile %}
+{% url 'profile' student.student_id %}
+{% endblock %}
+{% block user %}
+{{student.name}}
+{% endblock user %}
+{% block allCourses %}
+{% url 'courses' %}
+{% endblock%}
+{% block courses %}
+{% url 'myCourses' %}
+{% endblock %}
+{% block content %}
+<div>
+   <!--navigation links-->
+   <div class="container">
+      <div class="container shadow-sm">
+         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb p-3">
+               <li class="breadcrumb-item active" aria-current="page">My courses</li>
+            </ol>
+         </nav>
+      </div>
+      {% if courses %}
+      <!-- Course container -->
+      <div class="card_primary d-flex justify-content-center flex-wrap">
+         {% for courses in courses %}
+         <!-- individual course starts -->
+         <div class="cd card text-center my-4 mx-4" style="width: 30rem !important;">
+            <div class="card-header text-light fw-bold">
+               Dept. of {{courses.department}}
+            </div>
+            <div class="card-body">
+               <h5 class="card-title fw-bold"> {{courses.department}}-{{courses.code}} : {{courses.name}}</h5>
+               <a href="{% url 'course' courses.code %}" class="btn btn-outline-dark px-5">Enter</a>
+            </div>
+            <div class="card-footer text-light fw-bold">
+               {% if courses.faculty %}
+               Course Teacher : {{ courses.faculty.name}}
+               {% else %}
+               Teacher not assigned yet
+               {% endif %}
+            </div>
+         </div>
+         <!-- individual course ends -->
+         {% endfor %}
+         <!-- Course container ends -->
+      </div>
+      {% else %}
+      <div class="text-center fs-5 text-secondary">
+         <p>You are not enrolled in any courses</p>
+      </div>
+      {% endif %}
+   </div>
+</div>
+<div id="chatbot-container">
+   <div id="chatbot-header">AI Chatbot</div>
+   <div id="chat-messages"></div>
+   <div id="chatbot-input-row">
+     <input type="text" id="chat-input" placeholder="Ask me anything..." autocomplete="off" />
+     <button id="chat-send-btn" onclick="sendMessage()">Send</button>
+   </div>
+ </div>
+ <script>
+   function sendMessage() {
+       const input = document.getElementById('chat-input');
+       const message = input.value.trim();
+       if (!message) return;
+       appendMessage(message, 'user-msg');
+       input.value = "";
+       fetch("{% url 'groq_chatbot' %}", {
+           method: "POST",
+           headers: {"Content-Type": "application/json"},
+           body: JSON.stringify({message: message})
+       })
+       .then(res => res.json())
+       .then(data => {
+           appendMessage(data.response, 'ai-msg');
+       });
+   }
+   
+   function appendMessage(text, cls) {
+       const chat = document.getElementById('chat-messages');
+       const div = document.createElement('div');
+       div.className = cls;
+       div.textContent = text;
+       chat.appendChild(div);
+       chat.scrollTop = chat.scrollHeight;
+   }
+   
+   document.getElementById('chat-input').addEventListener('keydown', function(e) {
+       if (e.key === 'Enter') sendMessage();
+   });
+   </script>
+
+   <div class="hybrid-jobs-container">
+      <h2 class="hybrid-jobs-title">Smart Job Recommendations</h2>
+      <p class="hybrid-jobs-subtitle">Get real-time job listings personalized for your profile</p>
+      
+      <div class="hybrid-jobs-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="keywords" class="hybrid-label">Job Keywords</label>
+            <input type="text" id="keywords" class="hybrid-input" placeholder="e.g., Python, Software Developer, Data Science"/>
+          </div>
+          <div class="form-field">
+            <label for="location" class="hybrid-label">Location</label>
+            <input type="text" id="location" class="hybrid-input" placeholder="e.g., New York, Remote, San Francisco"/>
+          </div>
+        </div>
+        
+        <label for="student-profile" class="hybrid-label">Your Profile</label>
+        <textarea id="student-profile" class="hybrid-textarea" placeholder="Describe your skills, experience, education, and career goals..."></textarea>
+        
+        <button class="hybrid-btn" onclick="searchSmartJobs()">Get Smart Recommendations</button>
+      </div>
+      
+      <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Analyzing jobs and finding the best matches...</p>
+      </div>
+      
+      <div id="jobs-results" class="jobs-results"></div>
+    </div>
+    
+    <script>
+    function searchSmartJobs() {
+        const keywords = document.getElementById('keywords').value;
+        const location = document.getElementById('location').value;
+        const studentProfile = document.getElementById('student-profile').value;
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('jobs-results');
+        
+        if (!studentProfile.trim()) {
+            alert('Please describe your profile first!');
+            return;
+        }
+        
+        loading.style.display = 'block';
+        results.innerHTML = '';
+        
+        fetch("{% url 'smart_job_recommendations' %}", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                keywords: keywords,
+                location: location,
+                student_profile: studentProfile
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            loading.style.display = 'none';
+            if (data.success) {
+                displayResults(data);
+            } else {
+                results.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+            }
+        })
+        .catch(error => {
+            loading.style.display = 'none';
+            results.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+        });
+    }
+    
+    function displayResults(data) {
+        const results = document.getElementById('jobs-results');
+        
+        let html = `
+            <div class="ai-recommendations">
+                <h3>🤖 AI-Powered Recommendations</h3>
+                <pre class="ai-output">${data.ai_recommendations}</pre>
+            </div>
+            
+            <div class="real-time-jobs">
+                <h3>�� Real-time Job Listings</h3>
+                <div class="jobs-grid">
+        `;
+        
+        data.real_time_jobs.forEach(job => {
+            html += `
+                <div class="job-card">
+                    <h4>${job.title}</h4>
+                    <p class="company">${job.company}</p>
+                    <p class="location">�� ${job.location}</p>
+                    <p class="description">${job.description}</p>
+                    <p class="salary">�� $${job.salary_min} - $${job.salary_max}</p>
+                    <a href="${job.url}" target="_blank" class="apply-btn">View Job</a>
+                </div>
+            `;
+        });
+        
+        html += `
+                </div>
+            </div>
+        `;
+        
+        results.innerHTML = html;
+    }
+    </script>
+{% endblock %}
