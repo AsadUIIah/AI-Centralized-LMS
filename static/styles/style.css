@@ -1,0 +1,574 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@700&display=swap");
+
+* {
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+.timer {
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+.btn {
+  border-radius: 3px !important;
+}
+
+.btn-primary {
+  background-color: #0b6ab8 !important;
+  border-color: #0b6ab8 !important;
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited {
+  background-color: #0e5ea0 !important;
+  border-color: #0e5ea0 !important;
+}
+
+.navbar-mod {
+  background-color: rgb(16, 110, 98);
+  color: white !important;
+}
+.liner-gradient-sky {
+  background: #1488cc;
+  background: -webkit-linear-gradient(to right, #2b32b2, #1488cc);
+  background: linear-gradient(to right, #2b32b2, #1488cc);
+}
+.liner-gradient-margo {
+  background: #f8eecc;
+  background: -webkit-linear-gradient(to right, #ffffff, #fff5d6);
+  background: linear-gradient(to right, #ffffff, #fff5d6);
+}
+
+.login {
+  min-height: 100vh;
+}
+
+.login-heading {
+  font-weight: 300;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.btn-login {
+  font-size: 0.9rem;
+  letter-spacing: 0.05rem;
+  padding: 0.75rem 1rem;
+}
+
+.card-header,
+.card-footer {
+  background-color: rgb(16, 110, 98);
+}
+
+.cd {
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px,
+    rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px,
+    rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+  transition: 0.3s;
+}
+
+.cd:hover {
+  transform: scale(1.1);
+}
+
+.container {
+  margin-top: 1.5rem;
+}
+
+.container-announcement {
+  max-width: 40vw;
+  min-width: 380px;
+}
+
+.profile {
+  width: 50%;
+  min-width: fit-content;
+  height: 40vh;
+  border-radius: 1.2rem;
+}
+
+.margin-mod {
+  padding-top: 4.5rem;
+}
+
+.form-border {
+  border: 2px solid rgb(10, 10, 48) !important;
+}
+
+.shadow {
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px !important;
+}
+.shadow-sm {
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px !important;
+}
+.shadow-lg {
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px !important;
+}
+.login-shadow {
+  box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
+}
+
+.searchbar {
+  border-radius: 3px;
+  border: none !important;
+}
+td,
+th {
+  vertical-align: middle !important;
+}
+.searchbar:focus {
+  border: none !important;
+}
+
+.searchbar:hover {
+  border: none !important;
+}
+.margin-p-bottom {
+  margin-bottom: 0.5rem !important;
+}
+.margin-p-top {
+  margin-top: 0.5rem !important;
+}
+.inline-icons {
+  vertical-align: bottom;
+}
+.gradBg {
+  background: linear-gradient(
+    0deg,
+    rgba(255, 247, 233, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  color: #482307;
+}
+
+.quizgen-container {
+  max-width: 500px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 32px 28px 24px 28px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  border: 1px solid #e0e0e0;
+}
+
+.quizgen-title {
+  text-align: center;
+  color: #4f8cff;
+  margin-bottom: 18px;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.quizgen-label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.quizgen-textarea {
+  width: 100%;
+  min-height: 90px;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1em;
+  resize: vertical;
+  margin-bottom: 10px;
+  background: #f7f9fa;
+  transition: border 0.2s;
+}
+
+.quizgen-textarea:focus {
+  border: 1.5px solid #4f8cff;
+  outline: none;
+}
+
+.quizgen-input {
+  width: 80px;
+  padding: 8px 10px;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  font-size: 1em;
+  margin-bottom: 16px;
+  background: #f7f9fa;
+  transition: border 0.2s;
+}
+
+.quizgen-input:focus {
+  border: 1.5px solid #4f8cff;
+  outline: none;
+}
+
+.quizgen-btn {
+  display: block;
+  width: 100%;
+  background: #4f8cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  transition: background 0.2s;
+}
+
+.quizgen-btn:hover {
+  background: #2563eb;
+}
+
+.quizgen-output-title {
+  margin-top: 18px;
+  font-size: 1.1em;
+  color: #333;
+  font-weight: 600;
+}
+
+.quizgen-output {
+  background: #f7f9fa;
+  border-radius: 8px;
+  padding: 14px;
+  min-height: 80px;
+  font-size: 1em;
+  color: #222;
+  white-space: pre-wrap;
+  margin-top: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+#chatbot-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 370px;
+  max-width: 95vw;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  border: 1px solid #e0e0e0;
+  z-index: 9999;
+}
+
+#chatbot-header {
+  background: #4f8cff;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 12px 12px 0 0;
+  font-size: 1.2em;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: move;
+}
+
+#chat-messages {
+  height: 320px;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f7f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#chat-messages div {
+  margin-bottom: 2px;
+  line-height: 1.5;
+}
+
+#chat-messages .user-msg {
+  align-self: flex-end;
+  background: #e3f0ff;
+  color: #1a237e;
+  padding: 8px 14px;
+  border-radius: 16px 16px 0 16px;
+  max-width: 80%;
+  word-break: break-word;
+  font-weight: 500;
+}
+
+#chat-messages .ai-msg {
+  align-self: flex-start;
+  background: #f1f8e9;
+  color: #33691e;
+  padding: 8px 14px;
+  border-radius: 16px 16px 16px 0;
+  max-width: 80%;
+  word-break: break-word;
+}
+
+#chatbot-input-row {
+  display: flex;
+  padding: 12px;
+  background: #fafbfc;
+  border-radius: 0 0 12px 12px;
+  gap: 8px;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  font-size: 1em;
+  outline: none;
+  transition: border 0.2s;
+}
+
+#chat-input:focus {
+  border: 1.5px solid #4f8cff;
+}
+
+#chat-send-btn {
+  background: #4f8cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0 18px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#chat-send-btn:hover {
+  background: #2563eb;
+}
+
+
+
+.hybrid-jobs-container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 32px 28px 24px 28px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  border: 1px solid #e0e0e0;
+}
+
+.hybrid-jobs-title {
+  text-align: center;
+  color: #4f8cff;
+  margin-bottom: 8px;
+  font-size: 1.8em;
+  font-weight: 700;
+}
+
+.hybrid-jobs-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 1em;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-field {
+  flex: 1;
+}
+
+.hybrid-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.hybrid-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  font-size: 1em;
+  background: #f7f9fa;
+  transition: border 0.2s;
+}
+
+.hybrid-input:focus {
+  border: 1.5px solid #4f8cff;
+  outline: none;
+}
+
+.hybrid-textarea {
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1em;
+  resize: vertical;
+  margin-bottom: 16px;
+  background: #f7f9fa;
+  transition: border 0.2s;
+}
+
+.hybrid-textarea:focus {
+  border: 1.5px solid #4f8cff;
+  outline: none;
+}
+
+.hybrid-btn {
+  display: block;
+  width: 100%;
+  background: #4f8cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.hybrid-btn:hover {
+  background: #2563eb;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #4f8cff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.jobs-results {
+  margin-top: 24px;
+}
+
+.ai-recommendations {
+  margin-bottom: 32px;
+}
+
+.ai-recommendations h3 {
+  color: #4f8cff;
+  margin-bottom: 12px;
+}
+
+.ai-output {
+  background: #f7f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  white-space: pre-wrap;
+  font-size: 0.95em;
+  line-height: 1.6;
+  border: 1px solid #e0e0e0;
+}
+
+.real-time-jobs h3 {
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.job-card {
+  background: #f7f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  transition: transform 0.2s;
+}
+
+.job-card:hover {
+  transform: translateY(-2px);
+}
+
+.job-card h4 {
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+}
+
+.job-card .company {
+  color: #4f8cff;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.job-card .location {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.job-card .description {
+  color: #555;
+  font-size: 0.9em;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.job-card .salary {
+  color: #28a745;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.apply-btn {
+  display: inline-block;
+  background: #4f8cff;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: background 0.2s;
+}
+
+.apply-btn:hover {
+  background: #2563eb;
+}
+
+.error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #f5c6cb;
+}
