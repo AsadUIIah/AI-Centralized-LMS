@@ -36,7 +36,7 @@ git clone https://github.com/AsadUIIah/AI-Centralized-LMS.git
 2. Go to the project directory
 
 ```bash
-cd eLMS-SWE
+cd LMS
 ```
 
 3. Create a virtual environment and activate it (Windows)
