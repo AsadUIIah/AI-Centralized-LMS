@@ -7,11 +7,10 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Count, Sum, F, FloatField, Q, Prefetch
 from django.db.models.functions import Cast
-from openai import OpenAI
-from groq import Groq
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from . import ml_utils
 import json
 
 
@@ -269,34 +268,29 @@ def generate_quiz(request):
     if request.method == "POST":
         data = json.loads(request.body)
         material = data.get("material", "")
-        num_questions = data.get("num_questions", 5)
+        try:
+            num_questions = int(data.get("num_questions", 5))
+        except (TypeError, ValueError):
+            num_questions = 5
 
-        client = Groq(api_key=settings.GROQ_API_KEY)
-        prompt = (
-            f"Generate {num_questions} multiple-choice questions with 4 options each and answers "
-            f"based on the following material:\n{material}\n"
-            "Format:\nQ1: ...\nA. ...\nB. ...\nC. ...\nD. ...\nAnswer: ...\n"
-        )
+        if not material.strip():
+            return JsonResponse({"error": "No material provided"}, status=400)
 
-        completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=1,
-            max_completion_tokens=1024,
-            top_p=1,
-            stream=False,  # Set to False for a single response
-            stop=None,
-        )
+        try:
+            questions = ml_utils.generate_quiz_questions(material, num_questions=num_questions)
+        except RuntimeError as e:
+            # Model not loaded - almost always means apps.py's ready() didn't fire,
+            # or the model files aren't at ml_utils.MODEL_DIR yet.
+            return JsonResponse({"error": str(e)}, status=500)
 
-        # If stream=True, you would need to collect the chunks
-        # For stream=False, just get the content directly
-        questions = completion.choices[0].message.content
+        if not questions:
+            return JsonResponse({
+                "error": "Couldn't extract enough content from the provided material "
+                         "to generate questions. Try a longer passage."
+            }, status=400)
+
         return JsonResponse({"questions": questions})
+
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
@@ -315,8 +309,6 @@ def course_recommendations(request):
             max_tokens=300,
             temperature=0.7,
         )
-        recommendations = response.choices[0].message['content'].strip()
+        recommendations = response.choices[0].message.content.strip()
         return JsonResponse({"recommendations": recommendations})
     return JsonResponse({"error": "Invalid request"}, status=400)
-
-

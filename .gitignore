@@ -1,0 +1,43 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+
+# --- Virtual environment ---
+env/
+venv/
+.venv/
+
+# --- Django ---
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+*.log
+
+# --- Secrets ---
+.env
+*.pem
+*.key
+
+# --- Fine-tuned ML model files (too large for GitHub, regenerate via the Colab notebook) ---
+quiz/ml_models/
+*.zip
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# --- IDE / editor ---
+.vscode/
+.idea/
+*.swp
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Jupyter ---
+.ipynb_checkpoints/

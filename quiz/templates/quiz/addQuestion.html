@@ -44,6 +44,7 @@
 
 <div class="container shadow-sm rounded p-4 animate__animated animate__zoomInLeft" style="max-width: 768px;">
    <p class="text-start">Add Question for <span class="fw-bold">"{{quiz.title}}"</span></p>
+   <div id="autofill-notice" class="text-info mb-2"></div>
    <form action=" {% url 'addQuestion' course.code quiz.id %} " method="post">
       {% csrf_token %}
       <div class="mb-3 row">
@@ -113,31 +114,120 @@
    <button class="quizgen-btn" onclick="generateQuiz()">Generate Quiz</button>
    
    <h3 class="quizgen-output-title">Generated Quiz</h3>
-   <pre id="quiz-output" class="quizgen-output"></pre>
+   <div id="quiz-output" class="quizgen-output"></div>
  </div>
  
- <script>
- function generateQuiz() {
-     const material = document.getElementById('material').value;
-     const num_questions = document.getElementById('num_questions').value;
-     const output = document.getElementById('quiz-output');
-     output.textContent = "Generating quiz, please wait...";
-     fetch("{% url 'generate_quiz' %}", {
-         method: "POST",
-         headers: {"Content-Type": "application/json"},
-         body: JSON.stringify({material, num_questions})
-     })
-     .then(res => res.json())
-     .then(data => {
-         output.textContent = data.questions;
-     });
- }
- </script>
 <script>
-   $(document).ready(function(){
-     setTimeout(function(){
-       $(".alert").alert('close');
-     },4000);
-   });
+const QUIZ_ID = "{{ quiz.id }}";
+const CURRENT_QUESTION_NUMBER = parseInt("{{ quiz.question_sl }}", 10);
+const STORAGE_KEY = `quizgen_questions_${QUIZ_ID}`;
+
+function generateQuiz() {
+    const material = document.getElementById('material').value;
+    const num_questions = document.getElementById('num_questions').value;
+    const output = document.getElementById('quiz-output');
+    output.innerHTML = "Generating quiz, please wait...";
+
+    fetch("{% url 'generate_quiz' %}", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({material, num_questions})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            output.innerHTML = `<p class="text-danger">${data.error}</p>`;
+            return;
+        }
+
+        if (!data.questions || data.questions.length === 0) {
+            output.innerHTML = "<p>No questions were generated. Try pasting a longer passage.</p>";
+            return;
+        }
+
+        // Persist so it survives the page reload that happens on "Save and add another".
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data.questions));
+
+        renderPreview(data.questions);
+        output.insertAdjacentHTML(
+            "afterbegin",
+            `<p class="text-success">Saved ${data.questions.length} generated question(s). ` +
+            `They'll auto-fill the form below as you move through "Save and add another".</p>`
+        );
+
+        // Auto-fill the very first one immediately, matching the current question number.
+        autoFillFromStorage();
+    })
+    .catch(err => {
+        output.innerHTML = `<p class="text-danger">Something went wrong: ${err}</p>`;
+    });
+}
+
+function renderPreview(questions) {
+    const output = document.getElementById('quiz-output');
+    let html = "";
+    questions.forEach((q, i) => {
+        html += `<div class="quizgen-question-block mb-3">`;
+        html += `<p><strong>Q${i + 1}: ${q.question}</strong></p>`;
+        html += `<ul class="list-unstyled">`;
+        q.options.forEach((opt, idx) => {
+            const letter = String.fromCharCode(65 + idx);
+            const isCorrect = (opt === q.answer);
+            html += `<li${isCorrect ? ' style="font-weight:bold;color:green;"' : ''}>`;
+            html += `${letter}. ${opt}${isCorrect ? ' (correct)' : ''}`;
+            html += `</li>`;
+        });
+        html += `</ul></div>`;
+    });
+    output.innerHTML = html;
+}
+
+function autoFillFromStorage() {
+    const stored = sessionStorage.getItem(STORAGE_KEY);
+    if (!stored) return;
+
+    const questions = JSON.parse(stored);
+    const index = CURRENT_QUESTION_NUMBER - 1; // question_sl is 1-based
+
+    if (index < 0 || index >= questions.length) {
+        return; // no generated question left for this slot - leave form for manual entry
+    }
+
+    const q = questions[index];
+
+    document.getElementById('textarea').value = q.question;
+
+    // Targeting by `name`, not `id`, since the option inputs share a duplicate
+    // id="option" in the markup - getElementById would only ever hit the first one.
+    document.querySelector('input[name="option1"]').value = q.options[0] || "";
+    document.querySelector('input[name="option2"]').value = q.options[1] || "";
+    document.querySelector('input[name="option3"]').value = q.options[2] || "";
+    document.querySelector('input[name="option4"]').value = q.options[3] || "";
+
+    const correctIndex = q.options.indexOf(q.answer);
+    const correctLetter = ["A", "B", "C", "D"][correctIndex] || "";
+    const answerSelect = document.querySelector('select[name="answer"]');
+    if (answerSelect && correctLetter) {
+        answerSelect.value = correctLetter;
+    }
+
+    // Marks and explanation are left blank intentionally - the model doesn't
+    // generate either of these, so the teacher fills them in manually.
+
+    const notice = document.getElementById('autofill-notice');
+    if (notice) {
+        notice.textContent = `Auto-filled from your generated quiz (question ${CURRENT_QUESTION_NUMBER} of ${questions.length}). Review before saving.`;
+    }
+}
+
+// Run on every page load, in case a generated quiz already exists in sessionStorage
+// from a previous question's page (e.g. after clicking "Save and add another").
+document.addEventListener('DOMContentLoaded', () => {
+    const stored = sessionStorage.getItem(STORAGE_KEY);
+    if (stored) {
+        renderPreview(JSON.parse(stored)); // keep the preview box populated across reloads
+    }
+    autoFillFromStorage();
+});
 </script>
 {% endblock %}
