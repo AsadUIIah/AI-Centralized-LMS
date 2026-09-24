@@ -167,7 +167,7 @@ th {
 
 .quizgen-title {
   text-align: center;
-  color: #4f8cff;
+  color: #106E62;
   margin-bottom: 18px;
   font-size: 1.5em;
   font-weight: 700;
@@ -195,7 +195,7 @@ th {
 }
 
 .quizgen-textarea:focus {
-  border: 1.5px solid #4f8cff;
+  border: 1.5px solid #106E62;
   outline: none;
 }
 
@@ -211,14 +211,14 @@ th {
 }
 
 .quizgen-input:focus {
-  border: 1.5px solid #4f8cff;
+  border: 1.5px solid #106E62;
   outline: none;
 }
 
 .quizgen-btn {
   display: block;
   width: 100%;
-  background: #4f8cff;
+  background: #106E62;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -232,7 +232,7 @@ th {
 }
 
 .quizgen-btn:hover {
-  background: #2563eb;
+  background: #0c554b;
 }
 
 .quizgen-output-title {
@@ -263,15 +263,19 @@ th {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-  display: flex;
+  display: none;
   flex-direction: column;
   font-family: 'Segoe UI', Arial, sans-serif;
   border: 1px solid #e0e0e0;
   z-index: 9999;
 }
 
+#chatbot-container.open {
+  display: flex;
+}
+
 #chatbot-header {
-  background: #4f8cff;
+  background: #106E62;
   color: #fff;
   padding: 14px 20px;
   border-radius: 12px 12px 0 0;
@@ -279,6 +283,68 @@ th {
   font-weight: 600;
   letter-spacing: 1px;
   cursor: move;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#chatbot-close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2em;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+#chatbot-close-btn:hover {
+  opacity: 0.75;
+}
+
+#chatbot-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#chatbot-clear-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.6);
+  color: #fff;
+  font-size: 0.75em;
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+#chatbot-clear-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+#chatbot-toggle-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #106E62;
+  color: #fff;
+  border: none;
+  font-size: 1.6em;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+#chatbot-toggle-btn:hover {
+  transform: scale(1.08);
+  background: #0c554b;
 }
 
 #chat-messages {
@@ -337,11 +403,11 @@ th {
 }
 
 #chat-input:focus {
-  border: 1.5px solid #4f8cff;
+  border: 1.5px solid #106E62;
 }
 
 #chat-send-btn {
-  background: #4f8cff;
+  background: #106E62;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -353,8 +419,9 @@ th {
 }
 
 #chat-send-btn:hover {
-  background: #2563eb;
+  background: #0c554b;
 }
+
 
 
 
@@ -371,7 +438,7 @@ th {
 
 .hybrid-jobs-title {
   text-align: center;
-  color: #4f8cff;
+  color: #106E62;
   margin-bottom: 8px;
   font-size: 1.8em;
   font-weight: 700;
@@ -412,7 +479,7 @@ th {
 }
 
 .hybrid-input:focus {
-  border: 1.5px solid #4f8cff;
+  border: 1.5px solid #106E62;
   outline: none;
 }
 
@@ -430,14 +497,14 @@ th {
 }
 
 .hybrid-textarea:focus {
-  border: 1.5px solid #4f8cff;
+  border: 1.5px solid #106E62;
   outline: none;
 }
 
 .hybrid-btn {
   display: block;
   width: 100%;
-  background: #4f8cff;
+  background: #106E62;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -449,7 +516,7 @@ th {
 }
 
 .hybrid-btn:hover {
-  background: #2563eb;
+  background: #0c554b;
 }
 
 .loading {
@@ -460,7 +527,7 @@ th {
 
 .spinner {
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #4f8cff;
+  border-top: 3px solid #106E62;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -482,7 +549,7 @@ th {
 }
 
 .ai-recommendations h3 {
-  color: #4f8cff;
+  color: #106E62;
   margin-bottom: 12px;
 }
 
@@ -526,7 +593,7 @@ th {
 }
 
 .job-card .company {
-  color: #4f8cff;
+  color: #106E62;
   font-weight: 500;
   margin-bottom: 4px;
 }
@@ -575,7 +642,7 @@ th {
 
 .apply-btn {
   display: inline-block;
-  background: #4f8cff;
+  background: #106E62;
   color: #fff;
   padding: 6px 12px;
   border-radius: 6px;
@@ -585,7 +652,7 @@ th {
 }
 
 .apply-btn:hover {
-  background: #2563eb;
+  background: #0c554b;
 }
 
 .error {

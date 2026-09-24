@@ -742,21 +742,39 @@ def guestFaculty(request):
         return redirect('std_login')
 
 
+LMS_SYSTEM_PROMPT = (
+    "You are the AI Learning Assistant built into AI-Centralized-LMS, a university "
+    "learning management system. Your job is to help students and faculty with things "
+    "related to their courses and this platform: explaining course concepts, helping "
+    "them study, clarifying assignments and quizzes (without directly giving away "
+    "graded answers), and helping them understand how to use LMS features.\n\n"
+    "If a student's course is programming-related, you may help explain code, debug "
+    "issues, and write example code as part of that coursework.\n\n"
+    "If someone asks for something clearly unrelated to their studies or this platform "
+    "(for example, general programming help for unrelated personal projects, casual "
+    "chit-chat, or tasks with no educational connection), politely explain that you're "
+    "focused on helping with their coursework and this platform, and redirect them "
+    "back to something you can actually help with here."
+)
+
+MAX_HISTORY_MESSAGES = 20
+
+
 @csrf_exempt
 def groq_chatbot(request):
     if request.method == "POST":
         data = json.loads(request.body)
         user_message = data.get("message", "")
+        history = data.get("history", [])  # list of {"role": ..., "content": ...} from the frontend
+
+        messages = [{"role": "system", "content": LMS_SYSTEM_PROMPT}]
+        messages.extend(history[-MAX_HISTORY_MESSAGES:])
+        messages.append({"role": "user", "content": user_message})
 
         client = Groq(api_key=settings.GROQ_API_KEY)
         completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            messages=[
-                {
-                    "role": "user",
-                    "content": user_message
-                }
-            ],
+            model="openai/gpt-oss-120b",
+            messages=messages,
             temperature=1,
             max_completion_tokens=1024,
             top_p=1,
@@ -765,6 +783,7 @@ def groq_chatbot(request):
         )
         answer = completion.choices[0].message.content
         return JsonResponse({"response": answer})
+
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
