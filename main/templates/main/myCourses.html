@@ -94,7 +94,7 @@
        if (e.key === 'Enter') sendMessage();
    });
    </script>
-
+   <div class="reco-widgets-row">
    <div class="hybrid-jobs-container">
       <h2 class="hybrid-jobs-title">Smart Job Recommendations</h2>
       <p class="hybrid-jobs-subtitle">Get real-time job listings personalized for your profile</p>
@@ -167,37 +167,129 @@
     
     function displayResults(data) {
         const results = document.getElementById('jobs-results');
-        
+
         let html = `
             <div class="ai-recommendations">
-                <h3>🤖 AI-Powered Recommendations</h3>
-                <pre class="ai-output">${data.ai_recommendations}</pre>
+                <h3>🎯 Top Matches For Your Profile</h3>
+        `;
+
+        if (!data.ranked_recommendations || data.ranked_recommendations.length === 0) {
+            html += `<p>No strong matches found for this profile. Try adding more detail, or broadening your keywords.</p>`;
+        } else {
+            html += `<div class="jobs-grid">`;
+            data.ranked_recommendations.forEach(job => {
+                const scorePercent = Math.round((job.match_score || 0) * 100);
+                const keywords = (job.matching_keywords || []).join(', ');
+                html += `
+                    <div class="job-card">
+                        <h4>${job.title}</h4>
+                        <p class="company">${job.company}</p>
+                        <p class="location">📍 ${job.location}</p>
+                        <p class="match-score"><strong>${scorePercent}% match</strong></p>
+                        ${keywords ? `<p class="matching-keywords">Matching: ${keywords}</p>` : ''}
+                        <p class="description">${job.description}</p>
+                        <p class="salary">💰 $${job.salary_min} - $${job.salary_max}</p>
+                        <a href="${job.url}" target="_blank" class="apply-btn">View Job</a>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        html += `
             </div>
-            
             <div class="real-time-jobs">
-                <h3>�� Real-time Job Listings</h3>
+                <h3>💼 All Real-time Job Listings</h3>
                 <div class="jobs-grid">
         `;
-        
+
         data.real_time_jobs.forEach(job => {
             html += `
                 <div class="job-card">
                     <h4>${job.title}</h4>
                     <p class="company">${job.company}</p>
-                    <p class="location">�� ${job.location}</p>
+                    <p class="location">📍 ${job.location}</p>
                     <p class="description">${job.description}</p>
-                    <p class="salary">�� $${job.salary_min} - $${job.salary_max}</p>
+                    <p class="salary">💰 $${job.salary_min} - $${job.salary_max}</p>
                     <a href="${job.url}" target="_blank" class="apply-btn">View Job</a>
                 </div>
             `;
         });
-        
+
         html += `
                 </div>
             </div>
         `;
-        
+
         results.innerHTML = html;
     }
     </script>
+
+    <div class="hybrid-jobs-container">
+        <h2 class="hybrid-jobs-title">🎓 Course Recommendations</h2>
+        <p class="hybrid-jobs-subtitle">Personalized suggestions based on your enrolled courses and interests</p>
+
+        <label for="course-interests" class="hybrid-label">Your Interests (optional)</label>
+        <textarea id="course-interests" class="hybrid-textarea"
+                placeholder="e.g. I'm interested in AI, data science, and web development"></textarea>
+
+        <button class="hybrid-btn" onclick="getCourseRecommendations()">Get Course Recommendations</button>
+
+        <div id="course-reco-loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Finding the best courses for you...</p>
+        </div>
+
+        <div id="course-reco-results" class="jobs-results"></div>
+    </div>
+
+    <script>
+    function getCourseRecommendations() {
+        const studentId = "{{ student.student_id }}";
+        const interests = document.getElementById('course-interests').value;
+        const loading = document.getElementById('course-reco-loading');
+        const results = document.getElementById('course-reco-results');
+
+        loading.style.display = 'block';
+        results.innerHTML = '';
+
+        fetch("{% url 'course_recommendations' %}", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                student_id: studentId,
+                student_info: interests
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            loading.style.display = 'none';
+
+            if (!data.recommendations || data.recommendations.length === 0) {
+                results.innerHTML = `<div class="error">${data.message || "No recommendations available yet."}</div>`;
+                return;
+            }
+
+            let html = '<div class="jobs-grid">';
+            data.recommendations.forEach(rec => {
+                const scorePercent = Math.round((rec.match_score || 0) * 100);
+                html += `
+                    <div class="job-card">
+                        <h4>${rec.course_code}: ${rec.course_name}</h4>
+                        <p class="company">${rec.department || ''}</p>
+                        <p class="match-score">${scorePercent}% match</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            results.innerHTML = html;
+        })
+        .catch(err => {
+            loading.style.display = 'none';
+            results.innerHTML = `<div class="error">Something went wrong: ${err.message}</div>`;
+        });
+    }
+    </script>
+    </div> 
 {% endblock %}

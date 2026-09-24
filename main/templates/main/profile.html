@@ -60,22 +60,4 @@
    </div>
 </div>
 
-
-<!--<button onclick="getRecommendations()">Get Course Recommendations</button>
-<pre id="recommendations-output"></pre>
-<script>
-function getRecommendations() {
-    // You can gather more student info as needed
-    const student_info = "GPA: 3.5, interested in AI and Data Science, completed courses: Math, Python";
-    fetch("{% url 'course_recommendations' %}", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({student_info})
-    })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById('recommendations-output').textContent = data.recommendations;
-    });
-}
-</script>-->
 {% endblock %}

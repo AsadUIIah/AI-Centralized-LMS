@@ -6,11 +6,11 @@ from django.template.defaulttags import register
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from .forms import AnnouncementForm, AssignmentForm, MaterialForm
+from . import recommender
 from django import forms
 from django.core import validators
 import requests
 from groq import Groq
-from openai import OpenAI
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -773,31 +773,33 @@ def course_recommendations(request):
     if request.method == "POST":
         data = json.loads(request.body)
         student_info = data.get("student_info", "")
+        student_id = data.get("student_id")
 
-        client = Groq(api_key=settings.GROQ_API_KEY)
-        prompt = (
-            f"Based on the following student profile, recommend 3 suitable courses from our catalog. "
-            f"Student info: {student_info}\n"
-            "Format:\n1. ...\n2. ...\n3. ...\n"
-        )
+        student = None
+        if student_id:
+            student = Student.objects.filter(student_id=student_id).first()
 
-        completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=1,
-            max_completion_tokens=1024,
-            top_p=1,
-            stream=False,
-            stop=None,
-        )
+        results = recommender.recommend_courses(student, student_info_text=student_info, top_n=3)
 
-        recommendations = completion.choices[0].message.content
+        if not results:
+            return JsonResponse({
+                "recommendations": [],
+                "message": "Not enough information to generate recommendations. "
+                           "Provide student_info text and/or a valid student_id."
+            })
+
+        recommendations = [
+            {
+                "course_code": r["course"].code,
+                "course_name": r["course"].name,
+                "department": r["course"].department.name if r["course"].department else None,
+                "match_score": r["score"],
+            }
+            for r in results
+        ]
+
         return JsonResponse({"recommendations": recommendations})
+
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
@@ -808,48 +810,27 @@ def smart_job_recommendations(request):
         student_profile = data.get("student_profile", "")
         keywords = data.get("keywords", "")
         location = data.get("location", "")
-        
+
         try:
-            # Step 1: Get real-time jobs from Adzuna API
+            # Step 1: Get real-time jobs from Adzuna API (unchanged - real external data)
             jobs_data = get_real_time_jobs(keywords, location)
-            
-            # Step 2: Use AI to filter and rank jobs based on student profile
-            client = Groq(api_key=settings.GROQ_API_KEY)
-            
-            prompt = (
-                f"Based on this student profile: {student_profile}\n\n"
-                f"And these available jobs: {jobs_data}\n\n"
-                f"Analyze and recommend the top 5 most suitable jobs. For each job, provide:\n"
-                f"1. Job Title and Company\n"
-                f"2. Why it's a good fit for this student\n"
-                f"3. Required skills match\n"
-                f"4. Application tips\n\n"
-                f"Format your response clearly with numbered recommendations."
-            )
-            
-            completion = client.chat.completions.create(
-                model="meta-llama/llama-4-scout-17b-16e-instruct",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=1,
-                max_completion_tokens=1024,
-                top_p=1,
-                stream=False,
-            )
-            
-            ai_recommendations = completion.choices[0].message.content
-            
+
+            # Step 2: Rank jobs against the student profile using TF-IDF similarity
+            # (replacing the previous Groq LLM ranking + narrative explanation)
+            ranked_jobs = recommender.recommend_jobs(student_profile, jobs_data, top_n=5)
+
             return JsonResponse({
                 "success": True,
                 "real_time_jobs": jobs_data,
-                "ai_recommendations": ai_recommendations
+                "ranked_recommendations": ranked_jobs,
             })
-            
+
         except Exception as e:
             return JsonResponse({
                 "success": False,
                 "error": f"Error fetching jobs: {str(e)}"
             })
-    
+
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 def get_real_time_jobs(keywords, location):

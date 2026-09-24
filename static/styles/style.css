@@ -550,6 +550,29 @@ th {
   margin-bottom: 12px;
 }
 
+.job-card .match-score {
+  color: #28a745;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Puts the Course Recommendations and Job Recommendations widgets side by side.
+   Wraps to stacked on narrow/mobile screens automatically via flex-wrap. */
+.reco-widgets-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  max-width: 1700px;
+  margin: 40px auto;
+}
+ 
+.reco-widgets-row .hybrid-jobs-container {
+  flex: 1 1 480px;
+  min-width: 0;   /* allows the flex item to shrink below its content's natural width */
+  margin: 0;      /* the row wrapper now handles spacing, not each container's own margin */
+}
+
 .apply-btn {
   display: inline-block;
   background: #4f8cff;
