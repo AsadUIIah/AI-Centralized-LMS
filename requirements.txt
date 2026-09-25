@@ -8,5 +8,8 @@ pycodestyle==2.8.0
 sqlparse==0.4.2
 toml==0.10.2
 tzdata==2022.1
-
+groq==1.7.0
+python-dotenv==1.2.3
+requests==2.34.2
+scikit-learn==1.9.1
 openai>=1.0.0
